@@ -1,0 +1,10 @@
+Chronodot Library for the Arduino IDE
+
+This library provides the usual Real Time Clock (RTC) functions from the original
+RTClib (courtesy of Adafruit) from which it was derrived. It adds the ability
+to read out the temperature as sensed by the Chronodot's internal temperature
+sensor. The readings are available in both celcius and farenheit.
+
+Examples are provided.
+
+Cheers!

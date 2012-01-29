@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For Twitter
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Chronodot	KEYWORD1
+DateTime	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+now	KEYWORD2
+adjust	KEYWORD2
+isrunning	KEYWORD2
+begin	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
