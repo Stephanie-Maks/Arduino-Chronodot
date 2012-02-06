@@ -72,7 +72,7 @@ DateTime::DateTime (uint32_t t) {
     d = days + 1;
 }
 
-DateTime::DateTime (uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec, uint8_t tempF, float tempC) {
+DateTime::DateTime (uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t min, uint8_t sec, int tempF, float tempC) {
     if (year >= 2000)
         year -= 2000;
     yOff = year;
@@ -148,9 +148,9 @@ uint8_t Chronodot::begin(void) {
 uint8_t Chronodot::isrunning(void) {
   Wire.beginTransmission(CHRONODOT_ADDRESS);
 #if ARDUINO >= 100
-  Wire.write((byte)0);
+  Wire.write((byte)0x0F);
 #else
-  Wire.send(0);
+  Wire.send(0x0F);
 #endif
   Wire.endTransmission();
 
@@ -164,17 +164,17 @@ uint8_t Chronodot::isrunning(void) {
 }
 
 void Chronodot::adjust(const DateTime& dt) {
+// send new date & time to chronodot
     Wire.beginTransmission(CHRONODOT_ADDRESS);
 #if ARDUINO >= 100
-    Wire.write((byte)0);
-    Wire.write(bin2bcd(dt.second()));
-    Wire.write(bin2bcd(dt.minute()));
-    Wire.write(bin2bcd(dt.hour()));
-    Wire.write(bin2bcd(0));
-    Wire.write(bin2bcd(dt.day()));
-    Wire.write(bin2bcd(dt.month()));
-    Wire.write(bin2bcd(dt.year() - 2000));
-    Wire.write((byte)0);
+    Wire.write((byte)0);							// memory address
+    Wire.write(bin2bcd(dt.second()));				// byte 0
+    Wire.write(bin2bcd(dt.minute()));				// byte 1
+    Wire.write(bin2bcd(dt.hour()));					// byte 2
+    Wire.write(bin2bcd(0));							// byte 3
+    Wire.write(bin2bcd(dt.day()));					// byte 4
+    Wire.write(bin2bcd(dt.month()));				// byte 5
+    Wire.write(bin2bcd(dt.year() - 2000));			// byte 6
 #else
     Wire.send(0);
     Wire.send(bin2bcd(dt.second()));
@@ -184,9 +184,32 @@ void Chronodot::adjust(const DateTime& dt) {
     Wire.send(bin2bcd(dt.day()));
     Wire.send(bin2bcd(dt.month()));
     Wire.send(bin2bcd(dt.year() - 2000));
-    Wire.send(0);
 #endif
     Wire.endTransmission();
+// now get the control byte - we need to set bit 7 to zero
+	Wire.beginTransmission(CHRONODOT_ADDRESS);
+#if ARDUINO >= 100
+	Wire.write((byte)0x0F);
+#else
+	Wire.send(0x0F);
+#endif
+	Wire.endTransmission();
+	Wire.requestFrom(CHRONODOT_ADDRESS, 1);
+#if ARDUINO >= 100
+	uint8_t ss = Wire.read();
+#else
+	uint8_t ss = Wire.receive();
+#endif
+	ss &= ~(1 << 7);				// clear OSF bit
+	Wire.beginTransmission(CHRONODOT_ADDRESS);
+#if ARDUINO >= 100
+	Wire.write((byte)0x0F);
+	Wire.write((byte)ss);
+#else
+	Wire.send(0x0F);
+	Wire.send(ss);
+#endif
+	Wire.endTransmission();
 }
 
 DateTime Chronodot::now() {
@@ -214,13 +237,13 @@ DateTime Chronodot::now() {
   uint8_t d = bcd2bin(blah[4]);
   uint8_t m = bcd2bin(blah[5]);
   uint16_t y = bcd2bin(blah[6]) + 2000;
-  float ttc  = (float)(unsigned int)blah[17];
+  float ttc  = (float)(int)blah[17];
   byte portion = blah[18];
   if(portion == 0b01000000) ttc += 0.25;
   if(portion == 0b10000000) ttc += 0.5;
   if(portion == 0b11000000) ttc += 0.75;
   float degF  = (((ttc * 9.0) / 5.0) + 32.5);
-  uint8_t ttf  = (unsigned int)degF;
+  int ttf  = (int)degF;
   return DateTime (y, m, d, hh, mm, ss, ttf, ttc);
 }
 

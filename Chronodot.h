@@ -11,7 +11,7 @@ class DateTime {
 public:
     DateTime (uint32_t t =0);
     DateTime (uint16_t year, uint8_t month, uint8_t day,
-                uint8_t hour =0, uint8_t min =0, uint8_t sec =0, uint8_t tempF =0, float tempC = 0.0);
+                uint8_t hour =0, uint8_t min =0, uint8_t sec =0, int tempF =0, float tempC = 0.0);
     DateTime (const char* date, const char* time);
     uint16_t year() const       { return 2000 + yOff; }
     uint8_t month() const       { return m; }
@@ -19,7 +19,7 @@ public:
     uint8_t hour() const        { return hh; }
     uint8_t minute() const      { return mm; }
     uint8_t second() const      { return ss; }
-    uint8_t tempF() const		{ return ttf; }
+    int tempF() const			{ return ttf; }
     float tempC() const			{ return ttc; }
     uint8_t dayOfWeek() const;
 
@@ -29,7 +29,8 @@ public:
     uint32_t unixtime(void) const;
 
 protected:
-    uint8_t yOff, m, d, hh, mm, ss, ttf;
+    uint8_t yOff, m, d, hh, mm, ss;
+    int ttf;
     float ttc;
 };
 

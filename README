@@ -7,4 +7,14 @@ sensor. The readings are available in both celcius and farenheit.
 
 Examples are provided.
 
+Changelog:
+
+February 2012:  Fixed bug in isRunning function - was checking 
+				the wrong register!
+				Fixed variable type error - was using unsigned
+				int for temperature, should have been int, to
+				accomodate negative numbers.
+December 2011:	Updated for Arduino 1.0 compatibility
+
+
 Cheers!
