@@ -19,6 +19,14 @@ public:
     uint8_t hour() const        { return hh; }
     uint8_t minute() const      { return mm; }
     uint8_t second() const      { return ss; }
+	
+    void setYear(uint16_t y)       { yOff = y - 2000; }
+    void setMonth(uint8_t m)       { this->m = m; }
+    void setDay(uint8_t d)         { this->d = d; }
+    void setHour(uint8_t hh)       { this->hh = hh; }
+    void setMinute(uint8_t mm)     { this->mm = mm; }
+    void setSecond(uint8_t ss)     { this->ss = ss; }
+	
     int tempF() const			{ return ttf; }
     float tempC() const			{ return ttc; }
     uint8_t dayOfWeek() const;
