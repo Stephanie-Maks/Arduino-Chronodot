@@ -9,6 +9,8 @@ Examples are provided.
 
 Changelog:
 
+May 2012:	Added preprocessor directives in Chronodot.h
+                which allows the file to be included multiple times
 February 2012:  Fixed bug in isRunning function - was checking 
 				the wrong register!
 				Fixed variable type error - was using unsigned
