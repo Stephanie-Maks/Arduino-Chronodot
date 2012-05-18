@@ -9,6 +9,9 @@ Examples are provided.
 
 Changelog:
 
+May 2012:	Added public setters for year, month, day, hour, second and second.
+		This allows updating a DateTime object in preparation for a call to
+		Chronodot.adjust (e.g. in response to user input to set date/time)
 February 2012:  Fixed bug in isRunning function - was checking 
 				the wrong register!
 				Fixed variable type error - was using unsigned
